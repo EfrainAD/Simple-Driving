@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Car : MonoBehaviour
 {
@@ -20,18 +21,14 @@ public class Car : MonoBehaviour
     
     private void OnTriggerEnter(Collider collision)
     {
-        // Check if the collision involves a specific tag.
         if (collision.CompareTag("Obstacle"))
         {
-            Debug.Log("Collision with obstacle detected!");
-            
-            Destroy(gameObject);
+            SceneManager.LoadScene("Scene_MainMenu");
         }
     }
 
     public void Steer(int direction)
     {
         turnDirection = direction;
-        Debug.Log("dir " + direction);
     }
 }
