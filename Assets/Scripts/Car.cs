@@ -18,6 +18,17 @@ public class Car : MonoBehaviour
             speed += (accelerate * Time.deltaTime);
     }
     
+    private void OnTriggerEnter(Collider collision)
+    {
+        // Check if the collision involves a specific tag.
+        if (collision.CompareTag("Obstacle"))
+        {
+            Debug.Log("Collision with obstacle detected!");
+            
+            Destroy(gameObject);
+        }
+    }
+
     public void Steer(int direction)
     {
         turnDirection = direction;
