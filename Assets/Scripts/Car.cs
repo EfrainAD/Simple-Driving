@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Car : MonoBehaviour
 {
     [SerializeField] private float speed;
+    [SerializeField] private float topSpeed;
     [SerializeField] private float accelerate;
     [SerializeField] private float turnSpeed;
     
@@ -16,7 +17,11 @@ public class Car : MonoBehaviour
         transform.Rotate(0f, turnDirection * turnSpeed * Time.deltaTime, 0f);
 
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        
+        if (speed < topSpeed)
+        {
             speed += (accelerate * Time.deltaTime);
+        }
     }
     
     private void OnTriggerEnter(Collider collision)
