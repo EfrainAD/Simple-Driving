@@ -7,71 +7,73 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] private TMP_Text highScoreText;
-    private const string highScoreKey = ScoreHandler.highScoreKey;
-
+    // Game Settings
     [SerializeField] private int maxEnergy;
     [SerializeField] private float energyRechargeDuration;
     
-    [SerializeField] private TMP_Text playButton;
+    // Game Objects
+    [SerializeField] private TMP_Text highScoreText;
+    [SerializeField] private TMP_Text playButtonText;
 
-    
-
-    private const string energyKey = "Energy";
-    private const string energyRechargeTimeKey = "EnergyRechargeTime";
+    // Keys for PlayerPrefs
+    private const string HighScoreKey = ScoreHandler.highScoreKey;
+    private const string SceneGameKey = "Scene_Game"; 
+    private const string EnergyKey = "Energy";
+    private const string EnergyRechargeTimeKey = "EnergyRechargeTime";
 
     private void Start() {
-        int highScore = PlayerPrefs.GetInt(highScoreKey);
+        displayHighScore();
 
-        highScoreText.text = $"High Score: {highScore}";
-
-        int energy = PlayerPrefs.GetInt(energyKey, maxEnergy);
-
-        playButton.text = $"{playButton.text} ({energy})";
+        int currentEnergy = PlayerPrefs.GetInt(EnergyKey, maxEnergy);
+        updatePlayButtonText(currentEnergy);
     }
     public void Play() {
-        int energy = PlayerPrefs.GetInt(energyKey, 3);
+        int currentEnergy = PlayerPrefs.GetInt(EnergyKey, maxEnergy);
 
-        if (energy > 0)
+        if (currentEnergy > 0)
         {
-            energy--;
-            if (energy == 0)
-            {
-                DateTime newRecharge = DateTime.Now.AddMinutes(energyRechargeDuration);
+            currentEnergy--;
+            PlayerPrefs.SetInt(EnergyKey, currentEnergy);
 
-                PlayerPrefs.SetString(energyRechargeTimeKey, newRecharge.ToString());
+            if (currentEnergy == 0)
+            {
+                setEnergyRechargeTime();
             }
             
-            PlayerPrefs.SetInt(energyKey, energy);
-            
-            SceneManager.LoadScene("Scene_Game");
+            SceneManager.LoadScene(SceneGameKey);
         }
-        else
+        else if (isEnergyRecharged())
         {
-            if (isEnergyRecharged())
-            {
-                PlayerPrefs.SetInt(energyKey, maxEnergy);
-                playButton.text = $"Play! ({maxEnergy})";
-            }
+            PlayerPrefs.SetInt(EnergyKey, maxEnergy-1); 
+            SceneManager.LoadScene(SceneGameKey);
         }
+    }
+
+    private void displayHighScore()
+    {
+        int highScore = PlayerPrefs.GetInt(HighScoreKey);
+
+        highScoreText.text = $"High Score: {highScore}";
+    }
+    private void updatePlayButtonText(int energy)
+    {
+        playButtonText.text = $"Play ({energy})";
+    }
+    
+    private void setEnergyRechargeTime()
+    {
+        DateTime nextRechargeTime = DateTime.Now.AddMinutes(energyRechargeDuration);
+
+        PlayerPrefs.SetString(EnergyRechargeTimeKey, nextRechargeTime.ToString());
     }
     private bool isEnergyRecharged()
     {
-        string energyRechargeTime = PlayerPrefs.GetString(energyRechargeTimeKey, String.Empty);
+        string energyRechargeTime = PlayerPrefs.GetString(EnergyRechargeTimeKey, String.Empty);
             
-            Debug.Log("energyRechargeTime: " + energyRechargeTime);
+        if (energyRechargeTime == String.Empty){return false;}
 
-            if (energyRechargeTime == String.Empty){return false;}
+        DateTime rechangeTime = DateTime.Parse(energyRechargeTime);
 
-            DateTime rechangeTime = DateTime.Parse(energyRechargeTime);
-
-            if (DateTime.Now > rechangeTime)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        return DateTime.Now > rechangeTime;
     }
 }
