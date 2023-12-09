@@ -14,6 +14,7 @@ public class MainMenu : MonoBehaviour
     // Game Objects
     [SerializeField] private TMP_Text highScoreText;
     [SerializeField] private TMP_Text playButtonText;
+    [SerializeField] private AndriodNotificationHandler andriodNotificationHandler;
 
     // Keys for PlayerPrefs
     private const string HighScoreKey = ScoreHandler.highScoreKey;
@@ -37,7 +38,10 @@ public class MainMenu : MonoBehaviour
 
             if (currentEnergy == 0)
             {
-                setEnergyRechargeTime();
+                DateTime nextRechargeTime = setEnergyRechargeTime();
+#if UNITY_ANDROID
+                andriodNotificationHandler.ScheduleNotification(nextRechargeTime);
+#endif
             }
             
             SceneManager.LoadScene(SceneGameKey);
@@ -60,11 +64,13 @@ public class MainMenu : MonoBehaviour
         playButtonText.text = $"Play ({energy})";
     }
     
-    private void setEnergyRechargeTime()
+    private DateTime setEnergyRechargeTime()
     {
         DateTime nextRechargeTime = DateTime.Now.AddMinutes(energyRechargeDuration);
 
         PlayerPrefs.SetString(EnergyRechargeTimeKey, nextRechargeTime.ToString());
+
+        return nextRechargeTime;
     }
     private bool isEnergyRecharged()
     {
