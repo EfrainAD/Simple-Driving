@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class MainMenu : MonoBehaviour
 {
@@ -29,6 +25,14 @@ public class MainMenu : MonoBehaviour
     private const string EnergyRechargeTimeKey = "EnergyRechargeTime";
 
     private void Start() {
+        OnApplicationFocus(true);
+    }
+
+    private void OnApplicationFocus(bool focusStatus) {
+        if (!focusStatus) {return;}
+
+        CancelInvoke();
+
         displayHighScore();
 
         int currentEnergy = PlayerPrefs.GetInt(EnergyKey, maxEnergy);
@@ -43,9 +47,10 @@ public class MainMenu : MonoBehaviour
             }
             else 
             {
+                float timeLeft = (float)DateTime.Parse(PlayerPrefs.GetString(EnergyRechargeTimeKey, "")).Subtract(DateTime.Now).TotalSeconds;
+                
                 playButton.interactable = false;
-                Invoke(nameof(resetMaxEnergy), 5);
-                // Invoke(nameof(resetMaxEnergy), (float)energyRechargeDuration * 60);
+                Invoke(nameof(resetMaxEnergy), timeLeft);
             }
         }
     }
