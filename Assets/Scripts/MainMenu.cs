@@ -9,12 +9,13 @@ public class MainMenu : MonoBehaviour
 {
     // Game Settings
     [SerializeField] private int maxEnergy;
-    [SerializeField] private float energyRechargeDuration;
+    [SerializeField] private double energyRechargeDuration;
     
     // Game Objects
     [SerializeField] private TMP_Text highScoreText;
     [SerializeField] private TMP_Text playButtonText;
     [SerializeField] private AndriodNotificationHandler andriodNotificationHandler;
+    [SerializeField] private IosNotificationHandler iosNotificationHandler;
 
     // Keys for PlayerPrefs
     private const string HighScoreKey = ScoreHandler.highScoreKey;
@@ -41,6 +42,8 @@ public class MainMenu : MonoBehaviour
                 DateTime nextRechargeTime = setEnergyRechargeTime();
 #if UNITY_ANDROID
                 andriodNotificationHandler.ScheduleNotification(nextRechargeTime);
+#elif UNITY_IOS
+                iosNotificationHandler.ScheduleNotification((int)energyRechargeDuration);
 #endif
             }
             

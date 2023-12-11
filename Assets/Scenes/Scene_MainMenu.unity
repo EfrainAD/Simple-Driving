@@ -370,6 +370,7 @@ GameObject:
   - component: {fileID: 1092543918}
   - component: {fileID: 1092543917}
   - component: {fileID: 1092543919}
+  - component: {fileID: 1092543920}
   m_Layer: 0
   m_Name: MainMenu
   m_TagString: Untagged
@@ -394,6 +395,7 @@ MonoBehaviour:
   highScoreText: {fileID: 1971805855}
   playButtonText: {fileID: 1508497014}
   andriodNotificationHandler: {fileID: 1092543919}
+  iosNotificationHandler: {fileID: 1092543920}
 --- !u!4 &1092543918
 Transform:
   m_ObjectHideFlags: 0
@@ -420,6 +422,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95152779dbcc94a38a008d46d0d2341e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1092543920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092543916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76ea05948097f4dc7acfcceee54c3b8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1136166584
