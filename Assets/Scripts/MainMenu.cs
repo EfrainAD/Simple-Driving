@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class MainMenu : MonoBehaviour
 {
@@ -14,6 +16,9 @@ public class MainMenu : MonoBehaviour
     // Game Objects
     [SerializeField] private TMP_Text highScoreText;
     [SerializeField] private TMP_Text playButtonText;
+    [SerializeField] private UnityEngine.UI.Button playButton;
+    
+    // Game Notifications Game Objects
     [SerializeField] private AndriodNotificationHandler andriodNotificationHandler;
     [SerializeField] private IosNotificationHandler iosNotificationHandler;
 
@@ -27,6 +32,17 @@ public class MainMenu : MonoBehaviour
         displayHighScore();
 
         int currentEnergy = PlayerPrefs.GetInt(EnergyKey, maxEnergy);
+        
+        if (currentEnergy == 0 && isEnergyRecharged())
+        {
+            resetMaxEnergy();
+        }
+        else if (currentEnergy == 0)
+        {
+            playButton.interactable = false;
+            Invoke(nameof(resetMaxEnergy), 5);
+        }
+        
         updatePlayButtonText(currentEnergy);
     }
     public void Play() {
@@ -56,6 +72,12 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    private void resetMaxEnergy()
+    {
+        PlayerPrefs.SetInt(EnergyKey, maxEnergy);
+        playButton.interactable = true;
+        updatePlayButtonText(maxEnergy);
+    }
     private void displayHighScore()
     {
         int highScore = PlayerPrefs.GetInt(HighScoreKey);

@@ -394,6 +394,7 @@ MonoBehaviour:
   energyRechargeDuration: 1
   highScoreText: {fileID: 1971805855}
   playButtonText: {fileID: 1508497014}
+  playButton: {fileID: 86097074}
   andriodNotificationHandler: {fileID: 1092543919}
   iosNotificationHandler: {fileID: 1092543920}
 --- !u!4 &1092543918
