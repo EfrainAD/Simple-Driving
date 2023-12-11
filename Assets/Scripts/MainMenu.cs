@@ -33,17 +33,21 @@ public class MainMenu : MonoBehaviour
 
         int currentEnergy = PlayerPrefs.GetInt(EnergyKey, maxEnergy);
         
-        if (currentEnergy == 0 && isEnergyRecharged())
-        {
-            resetMaxEnergy();
-        }
-        else if (currentEnergy == 0)
-        {
-            playButton.interactable = false;
-            Invoke(nameof(resetMaxEnergy), 5);
-        }
-        
         updatePlayButtonText(currentEnergy);
+
+        if (currentEnergy == 0)
+        {
+            if (isEnergyRecharged())
+            {
+                resetMaxEnergy();
+            }
+            else 
+            {
+                playButton.interactable = false;
+                Invoke(nameof(resetMaxEnergy), 5);
+                // Invoke(nameof(resetMaxEnergy), (float)energyRechargeDuration * 60);
+            }
+        }
     }
     public void Play() {
         int currentEnergy = PlayerPrefs.GetInt(EnergyKey, maxEnergy);
@@ -56,18 +60,9 @@ public class MainMenu : MonoBehaviour
             if (currentEnergy == 0)
             {
                 DateTime nextRechargeTime = setEnergyRechargeTime();
-#if UNITY_ANDROID
-                andriodNotificationHandler.ScheduleNotification(nextRechargeTime);
-#elif UNITY_IOS
-                iosNotificationHandler.ScheduleNotification((int)energyRechargeDuration);
-#endif
+                sendRechargeNotification(nextRechargeTime);
             }
             
-            SceneManager.LoadScene(SceneGameKey);
-        }
-        else if (isEnergyRecharged())
-        {
-            PlayerPrefs.SetInt(EnergyKey, maxEnergy-1); 
             SceneManager.LoadScene(SceneGameKey);
         }
     }
@@ -106,5 +101,13 @@ public class MainMenu : MonoBehaviour
         DateTime rechangeTime = DateTime.Parse(energyRechargeTime);
 
         return DateTime.Now > rechangeTime;
+    }
+    private void sendRechargeNotification(DateTime nextRechargeTime)
+    {
+#if UNITY_ANDROID
+        andriodNotificationHandler.ScheduleNotification(nextRechargeTime);
+#elif UNITY_IOS
+        iosNotificationHandler.ScheduleNotification((int)energyRechargeDuration);
+#endif
     }
 }
