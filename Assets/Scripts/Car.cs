@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public class Car : MonoBehaviour
 {
     [SerializeField] private float speed;
-    [SerializeField] private float topSpeed;
+    [SerializeField] private float topSpeedFromStart;
+    [SerializeField] private float accelerateFromStart;
     [SerializeField] private float accelerate;
     [SerializeField] private float turnSpeed;
     
@@ -18,7 +19,11 @@ public class Car : MonoBehaviour
 
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
         
-        if (speed < topSpeed)
+        if (speed < topSpeedFromStart)
+        {
+            speed += (accelerateFromStart * Time.deltaTime);
+        }
+        else
         {
             speed += (accelerate * Time.deltaTime);
         }
